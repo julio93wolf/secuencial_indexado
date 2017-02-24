@@ -16,7 +16,7 @@ public class c_grafo {
     private int a_Llave;
     private char a_Origen;
     private char a_Destino;
-    private double a_Peso;
+    private float a_Peso;
     
     /**
      * Contructor para la clase grafo
@@ -105,7 +105,7 @@ public class c_grafo {
                     v_Maestro.writeInt(a_Llave);
                     v_Maestro.writeChar(a_Origen);
                     v_Maestro.writeChar(a_Destino);
-                    v_Maestro.writeDouble(a_Peso);
+                    v_Maestro.writeFloat(a_Peso);
                     
                     v_Indice.writeInt(a_Llave);
                     v_Indice.writeLong(v_Direccion);
@@ -141,7 +141,8 @@ public class c_grafo {
                 System.out.print(v_Archivo.readInt()+"\t");
                 System.out.print(v_Archivo.readChar()+"\t");
                 System.out.print(v_Archivo.readChar()+"\t");
-                System.out.print(v_Archivo.readDouble()+"\n");
+                System.out.print(v_Archivo.readFloat()+"\n");
+                v_apActual=v_Archivo.getFilePointer();
             }
             System.out.println("");
             v_Archivo.close();
