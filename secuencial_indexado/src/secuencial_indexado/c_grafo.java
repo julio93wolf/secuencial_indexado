@@ -39,10 +39,12 @@ public class c_grafo {
                 System.out.println("\u001B[34m[1]\u001B[30m Ingresar Nodo");
                 System.out.println("\u001B[34m[2]\u001B[30m Mostrar Nodos");
                 System.out.println("\u001B[34m[3]\u001B[30m Muestra Nodo");
-                System.out.println("\u001B[34m[4]\u001B[30m Salir");
+                System.out.println("\u001B[34m[4]\u001B[30m Modifica Nodo");
+                System.out.println("\u001B[34m[5]\u001B[30m Eliminar Nodo");
+                System.out.println("\u001B[34m[6]\u001B[30m Salir");
                 System.out.print("\nOpción: ");
                 v_Opcion = v_Entrada.nextInt();
-                if(v_Opcion>0&&v_Opcion<5){
+                if(v_Opcion>0&&v_Opcion<7){
                     m_MenuOpcion(v_Opcion);
                 }else{
                     System.out.println("\u001B[31mError: Ingrese una opción valida\u001B[30m");
@@ -50,7 +52,7 @@ public class c_grafo {
             }catch(Exception e){
                 System.out.println("\u001B[31mError: Ingrese un número entero\u001B[30m ");
             }
-        }while(v_Opcion!=4);
+        }while(v_Opcion!=6);
     }// Fin del Método
     
     /**
@@ -69,6 +71,14 @@ public class c_grafo {
             }
             case 3:{
                 m_leeAleatorio();
+                break;
+            }
+            case 4:{
+                m_Modifica();
+                break;
+            }
+            case 5:{
+                m_Elimina();
                 break;
             }
         }
@@ -204,6 +214,110 @@ public class c_grafo {
                     System.out.print(v_Maestro.readChar()+"\t");
                     System.out.print("\u001B[34m"+v_Maestro.readFloat()+"\u001B[30m\n");
                     System.out.println("\n\u001B[31m¿Desea buscar otro nodo?\u001B[30m");
+                    System.out.println("\u001B[34m[Si]\u001B[30m = 1");
+                    System.out.println("\u001B[34m[No]\u001B[30m = Cualquier tecla");
+                    System.out.print("\nOpción:");
+                    v_Opcion=v_Entrada.next().charAt(0);
+                }catch(Exception e){
+                    System.out.println("\u001B[31mError: Valor invalido\u001B[30m");
+                }
+            }while(v_Opcion=='1');
+        }
+    }//Fin del Método
+    
+    
+    private void m_Modifica(){        
+        int v_Llave;
+        char v_Opcion='1';
+        long v_tamRegistro=0,v_Desplazamiento=0;
+        RandomAccessFile v_Maestro = null;
+        Scanner v_Entrada;
+        try{
+            v_Maestro = new RandomAccessFile("src/archivos/maestro.dat","rw");
+        }catch(Exception e){
+            System.out.println("\u001B[31mError: No se pudo abrir el archivos maestro\u001B[30m");
+        }
+        if(v_Maestro!=null){
+            try{
+                v_Maestro.readInt();
+                v_Maestro.readChar();
+                v_Maestro.readChar();
+                v_Maestro.readFloat();
+                v_tamRegistro=v_Maestro.getFilePointer(); //Regresa direccion del Puntero
+            }catch(Exception e){
+                System.out.println("\u001B[31mError: No se pudo abrir el archivos maestro\u001B[30m");
+            }
+            do{
+                try{
+                    v_Entrada=new Scanner(System.in);
+                    System.out.print("Ingrese Llave: ");
+                    v_Llave=v_Entrada.nextInt();
+                    v_Desplazamiento=(v_Llave-1)*v_tamRegistro;
+                    v_Maestro.seek(v_Desplazamiento);
+                    v_Maestro.readInt();
+                    
+                    System.out.print("\nOrigen: ");
+                    a_Origen = v_Entrada.next().charAt(0);
+                    System.out.print("Destino: ");
+                    a_Destino = v_Entrada.next().charAt(0);
+                    System.out.print("Peso: ");
+                    a_Peso = v_Entrada.nextFloat();
+                    
+                    v_Maestro.writeChar(a_Origen);
+                    v_Maestro.writeChar(a_Destino);
+                    v_Maestro.writeFloat(a_Peso);
+                    
+                    System.out.println("\n\u001B[31m¿Desea modificar otro nodo?\u001B[30m");
+                    System.out.println("\u001B[34m[Si]\u001B[30m = 1");
+                    System.out.println("\u001B[34m[No]\u001B[30m = Cualquier tecla");
+                    System.out.print("\nOpción:");
+                    v_Opcion=v_Entrada.next().charAt(0);
+                }catch(Exception e){
+                    System.out.println("\u001B[31mError: Valor invalido\u001B[30m");
+                }
+            }while(v_Opcion=='1');
+        }
+    }//Fin del Método
+    
+    private void m_Elimina(){        
+        int v_Llave;
+        char v_Opcion='1';
+        long v_tamRegistroMaestro=0,v_tamRegistroIndice=0,v_Desplazamiento=0;
+        RandomAccessFile v_Maestro = null,v_Indice=null;
+        Scanner v_Entrada;
+        try{
+            v_Maestro = new RandomAccessFile("src/archivos/maestro.dat","rw");
+            v_Indice = new RandomAccessFile("src/archivos/indice.dat","rw");
+        }catch(Exception e){
+            System.out.println("\u001B[31mError: No se pudo abrir el archivos maestro\u001B[30m");
+        }
+        if(v_Maestro!=null && v_Indice!=null){
+            try{
+                v_Maestro.readInt();
+                v_Maestro.readChar();
+                v_Maestro.readChar();
+                v_Maestro.readFloat();
+                v_Indice.readInt();
+                v_Indice.readLong();
+                v_tamRegistroMaestro=v_Maestro.getFilePointer(); //Regresa direccion del Puntero
+                v_tamRegistroIndice=v_Indice.getFilePointer();
+            }catch(Exception e){
+                System.out.println("\u001B[31mError: No se pudo abrir el archivos maestro\u001B[30m");
+            }
+            do{
+                try{
+                    v_Entrada=new Scanner(System.in);
+                    System.out.print("Ingrese Llave: ");
+                    v_Llave=v_Entrada.nextInt();
+                    v_Desplazamiento=(v_Llave-1)*v_tamRegistroMaestro;
+                    v_Maestro.seek(v_Desplazamiento);
+                    v_Maestro.writeInt(-1);
+                    
+                    v_Desplazamiento=(v_Llave-1)*v_tamRegistroIndice;
+                    v_Indice.seek(v_Desplazamiento);
+                    v_Indice.writeInt(-1);
+                    
+                    System.out.println("\n\u001B[31m¿Desea eliminar otro nodo?\u001B[30m");
                     System.out.println("\u001B[34m[Si]\u001B[30m = 1");
                     System.out.println("\u001B[34m[No]\u001B[30m = Cualquier tecla");
                     System.out.print("\nOpción:");

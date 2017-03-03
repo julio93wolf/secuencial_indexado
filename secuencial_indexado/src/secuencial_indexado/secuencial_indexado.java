@@ -1,5 +1,5 @@
-/* 
- * Clase principal para gestion de archivos de binarios organizados de manera
+/**
+ * Clase principal para gestion de archivos de binarios organizados de manera.
  * secuencial indexada
  */
 
